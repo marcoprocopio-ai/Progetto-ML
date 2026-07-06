@@ -1,0 +1,23 @@
+# Ambienti virtuali
+.venv/
+venv/
+env/
+
+# Dati e modelli (pesanti, non versionati)
+data_utk/
+ckpt/
+*.zip
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
