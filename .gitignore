@@ -13,6 +13,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Test
+.pytest_cache/
+.coverage
+htmlcov/
+
 # Jupyter
 .ipynb_checkpoints/
 

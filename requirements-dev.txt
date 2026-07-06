@@ -1,0 +1,16 @@
+# Dipendenze per eseguire la suite di test (versioni pinnate da pip freeze del .venv).
+# Usate dalla CI GitHub Actions su macchina pulita.
+
+# Framework di test e coverage
+pytest==9.1.1
+pytest-cov==7.1.0
+
+# Logica testata (src/leaves)
+numpy==2.4.6
+pandas==3.0.3
+pillow==12.2.0
+scikit-learn==1.9.0
+
+# Backend dei modelli (Keras con backend torch)
+keras==3.15.0
+torch==2.12.0

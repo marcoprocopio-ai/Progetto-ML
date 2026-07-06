@@ -1,0 +1,10 @@
+[tool.pytest.ini_options]
+# Rende importabile il package `leaves` senza installazione.
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "--cov=leaves --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["leaves"]
+# Esclusi deliberatamente dalla misura: training, IO pesante, plotting e Optuna
+# non sono stati estratti in src/ (restano solo nel notebook).
