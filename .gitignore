@@ -3,7 +3,7 @@
 venv/
 env/
 
-# Dati e modelli (pesanti, non versionati)
+# Dati e modelli
 data_utk/
 ckpt/
 *.zip
