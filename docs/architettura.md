@@ -2,10 +2,11 @@
 
 Il progetto rileva e classifica le malattie delle foglie di **pomodoro** sul dataset
 **PlantVillage**, combinando una componente non supervisionata (autoencoder) e una
-supervisionata (XGBoost). Questo documento descrive il flusso end-to-end così com'è
+supervisionata (XGBoost). Questo documento descrive il flusso E2E così com'è
 implementato nel notebook `models/leaves_classifier.ipynb`.
 
-> **Nota sull'ambito.** L'autoencoder è addestrato solo su foglie sane, ma nel codice
+> **Nota iniziale del progetto.** → Nasce inizialmente come rilevatore di anomalie localizzate sulle sole foglie di pomodoro, ma per decisioni progettuali si è tramutato in un classificatore di malattie (vedi [0002](0002-autoencoder-vs-patchcore.md)). 
+> L'autoencoder è addestrato solo su foglie sane, ma nel codice
 > attuale il suo encoder viene usato **come estrattore di feature** per il classificatore.
 > Il rilevamento delle anomalie tramite errore di ricostruzione **non è implementato**
 > (vedi [decisioni/0004](decisioni/0004-encoder-feature-extractor.md) e

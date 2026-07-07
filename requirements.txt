@@ -1,0 +1,22 @@
+# Dipendenze runtime per eseguire i notebook (models/leaves_classifier*.ipynb).
+# Versioni pinnate da pip freeze del .venv, non a memoria.
+#
+# Keras usa il backend torch: impostare KERAS_BACKEND=torch prima di avviare
+# (vedi README). Il dataset PlantVillage NON è incluso (2,19 GB): va scaricato
+# da Kaggle una volta, poi il notebook lo trova ed estrae in automatico.
+
+# Dati e utilità numeriche
+numpy==2.4.6
+pandas==3.0.3
+pillow==12.2.0
+scipy==1.18.0
+matplotlib==3.11.0
+
+# Autoencoder (Keras backend torch)
+keras==3.15.0
+torch==2.12.0
+
+# Classificatore e tuning
+scikit-learn==1.9.0
+xgboost==3.3.0
+optuna==4.9.0

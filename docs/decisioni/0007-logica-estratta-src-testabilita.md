@@ -1,6 +1,6 @@
-# ADR 0006 — Logica estratta in `src/` per testabilità, notebook originale preservato
+# ADR 0008 — Logica estratta in `src/` per testabilità, notebook originale preservato
 
-**Stato:** accettata · **Ambito:** struttura del progetto e testing
+**Ambito:** struttura del progetto e testing
 
 ## Contesto
 

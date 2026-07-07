@@ -32,11 +32,14 @@ notebook **`models/leaves_classifier.ipynb`** con motore Keras con backend torch
 Progetto ML/
 ├── README.md
 ├── .gitignore
+├── requirements.txt                        # dipendenze runtime (notebook), versioni pinnate
+├── requirements-dev.txt                    # dipendenze per i test
 ├── pyproject.toml                          # configurazione pytest + coverage
+├── .github/workflows/ci.yml                # CI: esegue i test a ogni push
 ├── docs/                                   # documentazione
 ├── models/
-│   └── leaves_classifier.ipynb             # notebook modello
-│  
+│   ├── leaves_classifier.ipynb             # notebook modello (originale)
+│   └── leaves_classifier_tuned.ipynb       # variante con iperparametri ottimizzati
 ├── src/leaves/                             # logica deterministica estratta dal notebook
 │   ├── data.py                             # `parse_class`, `load_images`
 │   ├── models.py                           # build_encoder/decoder/autoencoder
@@ -68,20 +71,32 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-Dipendenze principali:
+Installare le dipendenze runtime (versioni pinnate in `requirements.txt`):
 
 ```bash
-pip install numpy pandas matplotlib scikit-learn pillow scipy keras torch optuna xgboost
+pip install -r requirements.txt
 ```
+
+Il progetto usa Keras con backend **torch**: impostare la variabile d'ambiente
+`KERAS_BACKEND=torch` prima di avviare Jupyter (PowerShell: `$env:KERAS_BACKEND="torch"`;
+Linux/macOS: `export KERAS_BACKEND=torch`). Senza questa variabile Keras tenterebbe di
+caricare TensorFlow.
 
 ## Dati
 
-Il dataset non è incluso nel repository e va scaricato a parte:
+Il dataset PlantVillage (~2,2 GB) **non è incluso nel repository** — è troppo grande per
+GitHub — e va scaricato **una sola volta** da Kaggle:
+[`abdallahalidev/plantvillage-dataset`](https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset).
 
-- **PlantVillage**: scaricare l'archivio da Kaggle (`abdallahalidev/plantvillage-dataset`)
-  e posizionare lo zip `plantvillage-dataset*.zip` nella cartella da cui si esegue il
-  notebook; verrà estratto automaticamente in `plantvillage/`. Il notebook usa il
-  sottoinsieme `segmented`.
+Non serve rinominare né spostare nulla a mano: basta lasciare lo zip scaricato in una di
+queste posizioni e il notebook lo trova ed estrae in automatico (cella di caricamento dati):
+
+- la cartella da cui si avvia il notebook, oppure la root del progetto;
+- la cartella `~/Downloads`.
+
+Sono riconosciuti i nomi più comuni dello zip (es. `archive*.zip`, `plantvillage*.zip`).
+Alla prima esecuzione viene estratto in `plantvillage/`; nelle esecuzioni successive, se la
+cartella esiste già, l'estrazione viene saltata. Il notebook usa il sottoinsieme `segmented`.
 
 ## Esecuzione
 
@@ -93,10 +108,16 @@ jupyter notebook
 jupyter lab
 ```
 
-Aprire `models/leaves_classifier.ipynb` ed eseguire le celle in ordine. I percorsi ai dati
-e ai checkpoint (`plantvillage/`, `ckpt/`) sono **relativi alla cartella di esecuzione**:
-per non rompere i riferimenti, avviare Jupyter dalla stessa cartella in cui si trovano lo
-zip del dataset e la cartella `ckpt/`.
+Aprire un notebook ed eseguire le celle in ordine:
+
+- `models/leaves_classifier.ipynb` — versione originale del modello;
+- `models/leaves_classifier_tuned.ipynb` — stessa struttura con iperparametri ottimizzati
+  (cap del campionamento 250→500, Optuna 20→45 trial con sampler seminato, `batch_size`
+  32→64, `EarlyStopping patience` 8→12). Il protocollo di valutazione (seed, split, metriche)
+  è identico all'originale per un confronto equo.
+
+I percorsi ai dati e ai checkpoint (`plantvillage/`, `ckpt/`) sono **relativi alla cartella di
+esecuzione**: avviare Jupyter dalla cartella del progetto per non rompere i riferimenti.
 
 ## Come lanciare i test
 
