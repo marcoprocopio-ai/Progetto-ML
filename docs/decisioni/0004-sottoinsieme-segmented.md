@@ -1,6 +1,6 @@
-# ADR 0001 — Uso del sottoinsieme `segmented` invece di `color`
+# ADR 0004 — Uso del sottoinsieme `segmented` invece di `color`
 
-**Ambito:** Preprocessing Dataset
+**Ambito:** Preprocessing dataset
 
 ## Contesto
 
@@ -21,8 +21,9 @@ l'estrazione di feature.
   dell'encoder dipendono meno da variazioni di sfondo.
 - **Negative:** Lo sfondo nero domina l'immagine ed è composto da pixel a
   valore ~0; questo interagisce con la scelta dell'attivazione di output
-  (vedi [0003](0003-attivazione-output-leaky-relu.md)).
+  (vedi [0006](0006-attivazione-output-leaky-relu.md)).
 
 Nel notebook è impostato `USE_SEGMENTED = True` ma non contiene un
 confronto quantitativo `segmented` vs `color`. La motivazione qui è ricostruita da
-precedenti esperimenti eseguiti con questo dataset. Riscontrando risultati leggermente ottimali con `segmented`
+precedenti esperimenti eseguiti con questo dataset, che hanno riscontrato risultati
+leggermente migliori con `segmented`.

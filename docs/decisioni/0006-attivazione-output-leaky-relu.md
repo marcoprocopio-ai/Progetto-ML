@@ -1,6 +1,6 @@
-# ADR 0005 — Attivazione `leaky_relu`
+# ADR 0006 — Attivazione `leaky_relu`
 
- **Ambito:** architettura autoencoder
+**Ambito:** Architettura autoencoder
 
 ## Contesto
 
@@ -20,7 +20,7 @@ seguita da `Rescaling(255.0)`.
   - Gestisce bene lo sfondo scuro delle immagini segmentate.
   - Mantiene sempre un **piccolo gradiente** anche per valori negativi, evitando neuroni
     morti tipici della `relu` pura.
-  - La struttura dell'autoencoder è stata testata con diverse funzionid di attivazione
+  - La struttura dell'autoencoder è stata testata con diverse funzioni di attivazione
     come la `sigmoid`, la `relu` e la `leaky_relu`; e quest'ultima ha dato risultati nettamente superiori.
 - **Negative:**
   - `leaky_relu` non vincola l'uscita a un intervallo limitato → la ricostruzione può
@@ -33,6 +33,6 @@ seguita da `Rescaling(255.0)`.
   avrebbero portato a **collassi della ricostruzione** su questo dataset.
 
 Il modello di autoencoder adotta `leaky_relu` e ne motiva l'uso per lo sfondo scuro
-e il gradiente. 
-Gli esperimenti di collasso con `sigmoid`/`relu`, non sono direttamente documentati con valori numerici 
-ma da improvvissi rialzi durante il training dei dati, intorno all'epoca 50.
+e il gradiente.
+Gli esperimenti di collasso con `sigmoid`/`relu` non sono direttamente documentati con valori numerici
+ma da improvvisi rialzi della loss durante il training, intorno all'epoca 50.

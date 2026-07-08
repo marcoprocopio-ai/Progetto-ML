@@ -1,6 +1,6 @@
-# ADR 0004 — Bottleneck convoluzionale invece di denso
+# ADR 0005 — Bottleneck convoluzionale invece di denso
 
-**Ambito:** Architettura Autoencoder
+**Ambito:** Architettura autoencoder
 
 ## Contesto
 
@@ -16,13 +16,13 @@ Adottare un **bottleneck convoluzionale** (8×8×32 = 2.048 valori) senza layer 
 ## Conseguenze
 
 - **Positive:**
-  - Conserva l'informazione spaziale (griglia 8×8): Forma, colore e venature restano
+  - Conserva l'informazione spaziale (griglia 8×8): forma, colore e venature restano
     ricostruibili, come osservato nella verifica qualitativa delle ricostruzioni nella fase di anomaly detection.
   - Meno parametri e training più stabile rispetto a un bottleneck denso
     equivalente su immagini 128×128.
   - Il tensore 8×8×32 appiattito diventa il vettore di
-    feature da 2.048 dim per XGBoost utilizzato per per la classificazione (vedi
-    [0004](0004-encoder-feature-extractor.md)).
+    feature da 2.048 dim per XGBoost utilizzato per la classificazione (vedi
+    [0007](0007-encoder-feature-extractor.md)).
 - **Negative:**
   - La rappresentazione resta **locale**: non c'è un layer che forzi una sintesi globale
     dell'immagine, quindi le feature sono ancora legate alla posizione dei pixel.
