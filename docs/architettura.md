@@ -87,7 +87,7 @@ output è `leaky_relu`: vedi [decisioni/0006](decisioni/0006-attivazione-output-
 
 ### Addestramento
 
-- Dati: **solo foglie sane di pomodoro**, split 80/20 → **1.272 train / 319 val**.
+- Dati: **solo foglie sane di pomodoro**, split 60/20/20.
   Augmentation con riflessioni orizzontale e verticale → **3.816** esempi di training.
   Input e target coincidono (l'autoencoder ricostruisce sé stesso).
 - Compilazione: `Adam(learning_rate=5e-4, clipnorm=1.0)`, loss **`MeanSquaredError`**,
@@ -98,14 +98,6 @@ output è `leaky_relu`: vedi [decisioni/0006](decisioni/0006-attivazione-output-
   (miglior `val_loss ≈ 187.7`, val MAE ≈ 6.8). Metriche dettagliate in
   [esperimenti.md](esperimenti.md).
 
-> **Strategia di split (due regimi deliberati).** L'autoencoder e il classificatore usano
-> split diversi e voluti. L'autoencoder è addestrato **solo su foglie sane** (split 80/20
-> sulle sole sane): è la premessa *one-class* del progetto — imparare l'aspetto del "sano"
-> senza mai vedere una malattia. XGBoost usa invece uno **split stratificato 60/20/20**
-> sull'intero campione bilanciato delle 10 condizioni, perché è un problema supervisionato
-> multi-classe in cui vanno preservate le proporzioni tra classi in train/val/test. La
-> conseguenza (encoder ottimizzato per ricostruire sane, non per discriminare malattie) è
-> discussa in [decisioni/0007](decisioni/0007-encoder-feature-extractor.md).
 
 ## 4. Errore di ricostruzione e score di anomalia
 

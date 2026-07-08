@@ -81,9 +81,8 @@ qui perché non presente come testo. Indicazioni qualitative derivabili dalle me
 
 ## Baseline di confronto
 
-> **Non calcolata nel notebook.** Con 10 classi bilanciate (250/classe), una baseline
-> casuale darebbe un'accuratezza attesa di **≈ 0.10**. Questo valore è *derivato
-> analiticamente*, non misurato nel codice. Rispetto a questa baseline, l'accuratezza
+> **Nota.** Con 10 classi bilanciate (250/classe), una baseline
+> casuale darebbe un'accuratezza attesa di **≈ 0.10**.  Rispetto a questa baseline, l'accuratezza
 > di 0.702 è nettamente superiore.
 
 ## Limiti 
