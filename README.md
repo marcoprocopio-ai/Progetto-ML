@@ -18,6 +18,8 @@ notebook **`models/leaves_classifier.ipynb`** con motore Keras con backend torch
 > è implementata** e l'encoder è usato solo come estrattore di feature. Dettagli in
 > [docs/decisioni/0007](docs/decisioni/0007-encoder-feature-extractor.md).
 
+E' in oltre importante specificare che **XGBoost** utilizza dati tabulari. Il dataset PlantVillage è composto da sole immagini, motivo per cui non è stato possibile applicare il solo modello di classificazione sin dall'inizio. E l'architettura utilizzata vedi [docs/architettura.md](docs/architettura.md), risolve questo limite utilizzando feature tabulari estratte direttamente dall'autoencoder.
+
 ## Documentazione
 
 - [docs/architettura.md](docs/architettura.md) — Pipeline completa e diagramma del flusso.
