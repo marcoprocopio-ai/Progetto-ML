@@ -15,10 +15,9 @@ indicato esplicitamente.
 ## Rilevamento anomalie (autoencoder)
 
 > **Non valutato quantitativamente.** Il notebook **non** calcola uno score di anomalia
-> dall'errore di ricostruzione né alcun **AUROC**. Le componenti predisposte
-> (`TOPK_FRAC = 0.02`, `gaussian_filter`, `roc_auc_score`) sono importate/definite ma
-> **mai usate**. Non esiste quindi una soglia, una separazione sane/malate misurata,
-> né una curva ROC.
+> dall'errore di ricostruzione. Le componenti predisposte a tale scopo
+> (`TOPK_FRAC = 0.02`, `gaussian_filter`) sono importate/definite ma
+> **mai usate**. Non esiste quindi una soglia né una separazione sane/malate misurata.
 
 Ciò che il notebook mostra è **solo qualitativo**: `show_reconstructions()` confronta
 alcune foglie sane originali con la loro ricostruzione. Osservazione riportata nel
@@ -33,9 +32,6 @@ notebook: forma, colore e venature principali restano riconoscibili.
 | `val_MAE` corrispondente | ≈ 6.8 |
 | Esempi train / val (sane) | 1.272 / 319 (→ 3.816 con augmentation) |
 
-> Nota: la loss è calcolata su pixel in scala `[0, 255]`, quindi i valori assoluti di
-> MSE/MAE non sono direttamente confrontabili con implementazioni che normalizzano in
-> `[0, 1]`.
 
 ## Classificazione tipo di malattia (XGBoost)
 
@@ -90,14 +86,11 @@ qui perché non presente come testo. Indicazioni qualitative derivabili dalle me
 > analiticamente*, non misurato nel codice. Rispetto a questa baseline, l'accuratezza
 > di 0.702 è nettamente superiore.
 
-## Limiti (dichiarati onestamente)
+## Limiti 
 
 - **Nessun rilevamento anomalie misurato.** La parte non supervisionata si ferma alla
   ricostruzione qualitativa; l'obiettivo iniziale di rilevare le malate tramite errore
-  di ricostruzione con AUROC non è realizzato nel codice attuale.
-- **Encoder non ottimizzato per la classificazione.** Le feature vengono da un
-  autoencoder addestrato a ricostruire foglie *sane*: non sono pensate per discriminare
-  tra malattie, il che pone un tetto alla resa di XGBoost.
+  di ricostruzione non è realizzato nel codice attuale.
 - **Campione ridotto e bilanciato artificialmente.** 250 immagini/classe non riflettono
   la distribuzione reale del dataset; le metriche non stimano il comportamento su classi
   sbilanciate.

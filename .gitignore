@@ -3,8 +3,8 @@
 venv/
 env/
 
-# Dati e modelli
-data_utk/
+# Dati e modelli (non versionati)
+plantvillage/
 ckpt/
 *.zip
 
@@ -12,11 +12,6 @@ ckpt/
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Test
-.pytest_cache/
-.coverage
-htmlcov/
 
 # Jupyter
 .ipynb_checkpoints/

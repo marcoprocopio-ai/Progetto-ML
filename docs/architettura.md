@@ -5,11 +5,11 @@ Il progetto rileva e classifica le malattie delle foglie di **pomodoro** sul dat
 supervisionata (XGBoost). Questo documento descrive il flusso E2E così com'è
 implementato nel notebook `models/leaves_classifier.ipynb`.
 
-> **Nota iniziale del progetto.** → Nasce inizialmente come rilevatore di anomalie localizzate sulle sole foglie di pomodoro, ma per decisioni progettuali si è tramutato in un classificatore di malattie (vedi [0002](0002-autoencoder-vs-patchcore.md)). 
+> **Nota iniziale del progetto.** → Nasce inizialmente come rilevatore di anomalie localizzate sulle sole foglie di pomodoro, ma per decisioni progettuali si è tramutato in un classificatore di malattie (vedi [0002](decisioni/0002-autoencoder-vs-patchcore.md)). 
 > L'autoencoder è addestrato solo su foglie sane, ma nel codice
 > attuale il suo encoder viene usato **come estrattore di feature** per il classificatore.
 > Il rilevamento delle anomalie tramite errore di ricostruzione **non è implementato**
-> (vedi [decisioni/0004](decisioni/0004-encoder-feature-extractor.md) e
+> (vedi [decisioni/0007](decisioni/0007-encoder-feature-extractor.md) e
 > [esperimenti.md](esperimenti.md)).
 
 ## Diagramma del flusso
@@ -44,7 +44,7 @@ flowchart TD
 - Il dataset offre più varianti delle stesse immagini in sottocartelle (`color`,
   `grayscale`, `segmented`). Con `USE_SEGMENTED=True` viene selezionata la sottocartella
   **`segmented`** (foglie ritagliate su sfondo nero). Vedi
-  [decisioni/0001](decisioni/0001-sottoinsieme-segmented.md).
+  [decisioni/0004](decisioni/0004-sottoinsieme-segmented.md).
 - Le classi sono cartelle nominate `Pianta___Condizione`. `parse_class()` ricava
   `(pianta, condizione, sana)`: `healthy` → foglia sana, altrimenti nome della malattia.
 - Risultato: **54.306 immagini, 14 specie, 21 condizioni** complessive. Il lavoro si
@@ -62,7 +62,8 @@ flowchart TD
 
 ## 3. Autoencoder convoluzionale
 
-Backend Keras impostato su **torch** (`KERAS_BACKEND=torch`).
+Backend Keras impostato su **torch** (`KERAS_BACKEND=torch`), vedi
+[decisioni/0001](decisioni/0001-keras-torch.md).
 
 **Encoder** (`name="encoder"`), risoluzione **128 → 64 → 32 → 16 → 8**:
 
@@ -81,8 +82,8 @@ ultimo `Conv2D(3, 3, leaky_relu)` seguito da `Rescaling(255.0)` che riporta i pi
 in `[0, 255]`.
 
 Il bottleneck è **convoluzionale** (mantiene la struttura spaziale 8×8) invece che denso:
-vedi [decisioni/0002](decisioni/0002-bottleneck-convoluzionale.md). L'attivazione di
-output è `leaky_relu`: vedi [decisioni/0003](decisioni/0003-attivazione-output-leaky-relu.md).
+vedi [decisioni/0005](decisioni/0005-bottleneck-convoluzionale.md). L'attivazione di
+output è `leaky_relu`: vedi [decisioni/0006](decisioni/0006-attivazione-output-leaky-relu.md).
 
 ### Addestramento
 
@@ -97,16 +98,25 @@ output è `leaky_relu`: vedi [decisioni/0003](decisioni/0003-attivazione-output-
   (miglior `val_loss ≈ 187.7`, val MAE ≈ 6.8). Metriche dettagliate in
   [esperimenti.md](esperimenti.md).
 
+> **Strategia di split (due regimi deliberati).** L'autoencoder e il classificatore usano
+> split diversi e voluti. L'autoencoder è addestrato **solo su foglie sane** (split 80/20
+> sulle sole sane): è la premessa *one-class* del progetto — imparare l'aspetto del "sano"
+> senza mai vedere una malattia. XGBoost usa invece uno **split stratificato 60/20/20**
+> sull'intero campione bilanciato delle 10 condizioni, perché è un problema supervisionato
+> multi-classe in cui vanno preservate le proporzioni tra classi in train/val/test. La
+> conseguenza (encoder ottimizzato per ricostruire sane, non per discriminare malattie) è
+> discussa in [decisioni/0007](decisioni/0007-encoder-feature-extractor.md).
+
 ## 4. Errore di ricostruzione e score di anomalia
 
 Nel codice attuale **non è presente** il calcolo di uno score di anomalia dall'errore di
-ricostruzione. Le costanti/funzioni predisposte a tale scopo (`TOPK_FRAC`, `gaussian_filter`,
-`roc_auc_score`) sono importate/definite ma **non usate**. Della componente di ricostruzione
+ricostruzione. Le costanti/funzioni predisposte a tale scopo (`TOPK_FRAC`, `gaussian_filter`)
+sono importate/definite ma **non usate**. Della componente di ricostruzione
 resta solo la verifica qualitativa `show_reconstructions()` (confronto originale vs ricostruita).
 
 La conseguenza progettuale — usare l'encoder come estrattore di feature invece che come
 rilevatore di anomalie pixel-based — è discussa in
-[decisioni/0004](decisioni/0004-encoder-feature-extractor.md).
+[decisioni/0007](decisioni/0007-encoder-feature-extractor.md).
 
 ## 5. Classificazione con XGBoost
 
@@ -120,6 +130,6 @@ rilevatore di anomalie pixel-based — è discussa in
   `subsample [0.6,1.0]`, `colsample_bytree [0.6,1.0]`, `reg_lambda [1e-3,10]` (log).
 - **Modello.** `XGBClassifier(n_estimators=600, eval_metric="mlogloss",
   early_stopping_rounds=20, tree_method="hist", device="cpu")`. Scelta CPU discussa in
-  [decisioni/0005](decisioni/0005-optuna-xgboost-cpu.md).
+  [decisioni/0008](decisioni/0008-optuna-xgboost-cpu.md).
 - **Valutazione.** Accuratezza, `classification_report` (precision/recall/F1 per classe)
   e matrice di confusione sul test set. Risultati in [esperimenti.md](esperimenti.md).

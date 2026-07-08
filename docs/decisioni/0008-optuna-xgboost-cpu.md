@@ -1,10 +1,10 @@
-# ADR 0007 — Tuning con Optuna e XGBoost forzato su CPU
+# ADR 0008 — Tuning con Optuna e XGBoost forzato su CPU
 
-**Ambito:** classificatore supervisionato
+**Ambito:** Classificatore supervisionato
 
 ## Contesto
 
-Il classificatore XGBoost ha diversi iperparametri sensibili (profondità, learning rate,
+Il classificatore **XGBoost** ha diversi iperparametri sensibili (profondità, learning rate,
 sottocampionamenti, regolarizzazione). Serviva una ricerca efficiente e riproducibile,
 oltre a una scelta del dispositivo di calcolo.
 Optuna ci permette di trovare gli iperparametri migliori per il modello.
@@ -29,7 +29,7 @@ Optuna ci permette di trovare gli iperparametri migliori per il modello.
     senza dipendere dalla presenza della GPU,  utile su ambienti eterogenei.
 - **Negative:**
   - Su feature da 2.048 dim, la CPU è più lenta di una GPU; 20 trial sono un compromesso
-    tra qualità della ricerca e tempo.
+    tra qualità della ricerca e tempo → motivo anche per la quale in quella fase del progetto sono stati presi in considerazione solo 2500 esempi suddivise tra le diverse malattie della pianta.
   - L'obiettivo di Optuna è la sola accuratezza sul validation, non ottimizza
     direttamente F1 macro o il comportamento sulle classi deboli.
 
