@@ -104,12 +104,12 @@ Mappatura delle fasi del **ciclo di vita ML** su questo progetto:
 
 | Fase | Come applicarli |
 |---|---|
-| **Raccolta dati** | Download una-tantum di PlantVillage da Kaggle; estrazione automatica; sottoinsieme `segmented`, specie `Tomato`. |
-| **Preparazione / feature** | Parsing cartelle, resize 128×128, estrazione feature tramite l'encoder (bottleneck `8×8×32` → 2.048 dim). |
-| **Training** | Autoencoder sulle foglie sane; XGBoost supervisionato sulle feature, con tuning iperparametri via Optuna. |
-| **Validazione** | Split **stratificato 60/20/20**; valutazione su test (accuratezza, F1 per classe, matrice di confusione). In ottica *testing ML* non si verificano output esatti ma che **il modello abbia senso**. |
-| **Deploy** | Impacchettando `encoder + XGBoost` dietro un servizio di inferenza, che riceve un'immagine e restituisce la condizione. |
-| **Monitoring** |   |
+| **Raccolta dati** | Il dataset PlantVillage viene scaricato una-tantum da Kaggle; il notebook individua lo zip ed estrae le immagini in automatico. Si seleziona il sottoinsieme `segmented` e, tra le 14 specie, la sola `Tomato` con le sue 10 condizioni. Nessuna raccolta continua: i dati sono statici e già etichettati tramite il nome cartella `Pianta___Condizione`. |
+| **Preparazione / feature** | Le immagini sono lette in RGB, ridimensionate a `128×128×3` e mantenute in `[0,255]` (normalizzazione delegata a un `Rescaling` interno). L'encoder dell'autoencoder produce il bottleneck `8×8×32`, appiattito a **2.048 feature** per immagine, che diventano l'input del classificatore. Dettaglio in [`docs/architettura.md`](docs/architettura.md). |
+| **Training** | Due addestramenti distinti → l'**autoencoder** impara a ricostruire le sole foglie sane (loss MSE), mentre **XGBoost** classifica le 10 condizioni dalle feature dell'encoder. Gli iperparametri di XGBoost sono cercati con **Optuna** (ottimizzazione bayesiana) massimizzando l'accuratezza sul validation. Tutto gira su CPU con seed fissato a 42. |
+| **Validazione** | Il campione bilanciato è diviso con split **stratificato 60/20/20** (train/validation/test) → il validation guida la scelta degli iperparametri, il test misura le prestazioni finali (accuratezza, F1 per classe, matrice di confusione). In ottica *testing ML* non si verificano output esatti ma che **il modello abbia senso**. Metriche reali in [`docs/esperimenti.md`](docs/esperimenti.md). |
+| **Deploy** | *Non implementato — come lo immaginiamo.* Il modello vive in un notebook; in produzione si impacchetterebbe l'**encoder** (pesi `ckpt/`) e il **classificatore XGBoost** serializzato dietro un servizio di inferenza. Un endpoint riceverebbe un'immagine, applicherebbe lo stesso preprocessing del training e restituirebbe la condizione con la relativa confidenza. Ambiente immaginato → un servizio gestito con rilascio via **CI/CD (GitHub Actions)**. |
+| **Monitoring** | Una volta fatto il Deploy, il modello andrebbe osservato con continuità (*monitoraggio e osservabilità*) → logging delle immagini in ingresso e delle predizioni, metriche tecniche dell'endpoint (latenza, errori) e qualità del modello nel tempo (accuratezza/F1 su un set di controllo etichettato). Il monitoraggio alimenterebbe i trigger di re-training (**Continuous Training**) descritti nella sezione [MLOps](#mlops). |
 
 ## MLOps
 
