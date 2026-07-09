@@ -84,15 +84,3 @@ qui perché non presente come testo. Indicazioni qualitative derivabili dalle me
 > **Nota.** Con 10 classi bilanciate (250/classe), una baseline
 > casuale darebbe un'accuratezza attesa di **≈ 0.10**.  Rispetto a questa baseline, l'accuratezza
 > di 0.702 è nettamente superiore.
-
-## Limiti 
-
-- **Nessun rilevamento anomalie misurato.** La parte non supervisionata si ferma alla
-  ricostruzione qualitativa; l'obiettivo iniziale di rilevare le malate tramite errore
-  di ricostruzione non è realizzato nel codice attuale.
-- **Campione ridotto e bilanciato artificialmente.** 250 immagini/classe non riflettono
-  la distribuzione reale del dataset; le metriche non stimano il comportamento su classi
-  sbilanciate.
-- **Confusioni tra malattie visivamente simili** (Early_blight / Target_Spot /
-  Late_blight) restano il principale collo di bottiglia.
-- **Nessuna cross-validation:** metriche da un singolo split (seed 42).

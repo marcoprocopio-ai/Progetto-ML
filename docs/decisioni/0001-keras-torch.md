@@ -18,8 +18,7 @@ TensorFlow, oppure JAX.
 
 ## Decisione
 
-Usare **Keras 3 con backend torch**: API concisa di Keras per definire e addestrare la rete,
-motore di calcolo torch al di sotto.
+Usare **Keras 3 con backend torch**: API concisa di Keras per definire e addestrare la rete, motore di calcolo torch al di sotto.
 
 ## Conseguenze
 
